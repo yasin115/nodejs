@@ -4,17 +4,43 @@ const app = express();
 const os = require('os');
 app.use(express.json());
 let users = require('./user');
-app.post("/api/users",[
+//------------------------------------------------------------------------------------------------------
+// app.post("/api/users",[
+// body('email','email must be valid').isEmail(),
+// body('first_name','firstname must be valid').notEmpty(),
+// body('last_name','last name must be valid').notEmpty(),
+
+// ],(req,res)=>{
+// 	const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+// 		return res.status(400).json({data:null,errors:errors.array(),message:'validation error'});
+// 	}
+//     users.push({id:users.length,...req.body});    
+//     res.json({data:users,message:"added"});
+//  });
+//------------------------------------------------------------------------------------------------------
+app.put("/api/users/:id",[
 body('email','email must be valid').isEmail(),
 body('first_name','firstname must be valid').notEmpty(),
 body('last_name','last name must be valid').notEmpty(),
-
 ],(req,res)=>{
+	const user = users.find(u=>u.id == req.params.id);
+	if (!user) {
+		return res.status(404).json({
+			data:null,message:"the user not found"
+		});
+	}
 	const errors = validationResult(req);
     if (!errors.isEmpty()) {
 		return res.status(400).json({data:null,errors:errors.array(),message:'validation error'});
 	}
-    users.push({id:users.length,...req.body});    
+	users = users.map(user=>{
+		if (user.id == req.params.id) {
+			return {...user , ...req.body}
+		}
+		return user
+	})
+    
     res.json({data:users,message:"added"});
  });
 	
