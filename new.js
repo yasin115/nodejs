@@ -6,8 +6,8 @@ app.use(express.json());
 let users = require('./user');
 app.post("/api/users",[
 body('email','email must be valid').isEmail(),
-body('first_name','first_name must be valid').notEmpty(),
-body('last_name','last_name must be valid').notEmpty(),
+body('first_name','firstname must be valid').notEmpty(),
+body('last_name','last name must be valid').notEmpty(),
 
 ],(req,res)=>{
 	const errors = validationResult(req);
